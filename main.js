@@ -1274,3 +1274,18 @@ if ("serviceWorker" in navigator) {
       .catch(err => console.log("Erro ao registrar SW:", err));
   });
 }
+
+installBtn.addEventListener('click', async () => {
+  installBtn.style.display = 'none';
+  deferredPrompt.prompt();
+  
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log(`Resultado da instalação: ${outcome}`);
+  
+  deferredPrompt = null;
+});
+
+window.addEventListener('appinstalled', () => {
+  showToast('App instalado com sucesso');
+  installBtn.style.display = 'none';
+});
