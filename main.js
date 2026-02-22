@@ -1274,16 +1274,18 @@ if ("serviceWorker" in navigator) {
       .catch(err => console.log("Erro ao registrar SW:", err));
   });
 }
+let deferredPrompt;
+const installBtn = document.getElementById("installBtn");
 
-installBtn.addEventListener('click', async () => {
-  installBtn.style.display = 'none';
-  deferredPrompt.prompt();
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
   
-  const { outcome } = await deferredPrompt.userChoice;
-  console.log(`Resultado da instalação: ${outcome}`);
-  
-  deferredPrompt = null;
+  if (installBtn) {
+    installBtn.style.display = "flex";
+  }
 });
+
 
 window.addEventListener('appinstalled', () => {
   showToast('App instalado com sucesso');
