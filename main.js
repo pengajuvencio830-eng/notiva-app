@@ -1269,7 +1269,7 @@ lucide.createIcons();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js")
+    navigator.serviceWorker.register("sw.js")
       .then(() => console.log("Service Worker registrado"))
       .catch(err => console.log("Erro ao registrar SW:", err));
   });
@@ -1280,10 +1280,17 @@ const installBtn = document.getElementById("installBtn");
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  
-  if (installBtn) {
-    installBtn.style.display = "flex";
+  installBtn.style.display = "block";
+});
+
+installBtn.addEventListener("click", async () => {
+  if (!deferredPrompt) {
+    alert("Instalação ainda não disponível");
+    return;
   }
+
+  deferredPrompt.prompt();
+  deferredPrompt = null;
 });
 
 
