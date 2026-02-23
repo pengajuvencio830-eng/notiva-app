@@ -1178,27 +1178,7 @@ function openViewModal(note) {
     if (deleteBtn) deleteBtn.classList.remove("hidden");
     
   }
-  const metaElement = document.getElementById("viewMeta");
-
-if (note.updatedAt) {
-  metaElement.textContent =
-    "Atualizado em " +
-    new Date(note.updatedAt).toLocaleDateString() +
-    " às " +
-    new Date(note.updatedAt).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-} else {
-  metaElement.textContent =
-    "Criado em " +
-    new Date(note.createdAt).toLocaleDateString() +
-    " às " +
-    new Date(note.createdAt).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-}
+  
   
   /* =========================
      EVENTOS
@@ -1289,9 +1269,30 @@ if (deleteBtn) {
   ========================== */
   
   document.getElementById("viewTitle").textContent = note.title;
-  document.getElementById("viewSubject").textContent = note.subject || "";
-  document.getElementById("viewContent").textContent = note.content;
-  
+document.getElementById("viewSubject").textContent = note.subject || "";
+document.getElementById("viewContent").textContent = note.content;
+
+const metaElement = document.getElementById("viewMeta");
+
+if (note.updatedAt) {
+  metaElement.textContent =
+    "Atualizado em " +
+    new Date(note.updatedAt).toLocaleDateString() +
+    " às " +
+    new Date(note.updatedAt).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+} else {
+  metaElement.textContent =
+    "Criado em " +
+    new Date(note.createdAt).toLocaleDateString() +
+    " às " +
+    new Date(note.createdAt).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+}
   modal.classList.remove("hidden");
 }
 function toggleFavorite(id) {
