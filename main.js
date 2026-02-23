@@ -1178,7 +1178,27 @@ function openViewModal(note) {
     if (deleteBtn) deleteBtn.classList.remove("hidden");
     
   }
-  
+  const metaElement = document.getElementById("viewMeta");
+
+if (note.updatedAt) {
+  metaElement.textContent =
+    "Atualizado em " +
+    new Date(note.updatedAt).toLocaleDateString() +
+    " às " +
+    new Date(note.updatedAt).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+} else {
+  metaElement.textContent =
+    "Criado em " +
+    new Date(note.createdAt).toLocaleDateString() +
+    " às " +
+    new Date(note.createdAt).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+}
   
   /* =========================
      EVENTOS
