@@ -1432,7 +1432,7 @@ function renderStep() {
   switch(step) {
     case "presentation":
       stepContainer.innerHTML = `
-        <img src="app-icon.png" alt="App" style="width:150px;margin-bottom:20px;">
+        <img src="icon-192.png" alt="App" style="width:150px;margin-bottom:20px;">
         <p>Bem-vindo ao Notiva.</p>
       `;
       nextBtn.disabled = false;
