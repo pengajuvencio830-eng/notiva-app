@@ -1439,19 +1439,36 @@ function renderStep() {
       break;
 
     case "terms":
-      stepContainer.innerHTML = `
-        <h3>Termos e Condições</h3>
-        <div style="height:150px; overflow:auto; border:1px solid #ccc; padding:10px;">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit...
-        </div>
-        <label>
-          <input type="checkbox" id="agreeTerms"> Concordo com os termos
-        </label>
-      `;
-      document.getElementById("agreeTerms").addEventListener("change", (e)=>{
-        nextBtn.disabled = !e.target.checked;
-      });
-      break;
+  stepContainer.innerHTML = `
+    <h3>Termos e Condições</h3>
+    <div style="height:200px; overflow:auto; border:1px solid #ccc; padding:10px; text-align:justify;">
+      <strong>Regras importantes do Notiva:</strong><br><br>
+
+      1. Todos os dados e notas são salvos diretamente no seu dispositivo. 
+      Isso garante que nada será perdido sem sua ação.<br><br>
+
+      2. Você pode criar, editar e excluir notas a qualquer momento. 
+      Notas apagadas vão para a Lixeira, onde podem ser restauradas ou apagadas permanentemente.<br><br>
+
+      3. Favoritos, títulos, disciplinas e conteúdos são mantidos de forma organizada. 
+      Sempre que marcar algo como favorito, ficará fácil acessar depois.<br><br>
+
+      4. É possível fazer backups usando “Exportar JSON” ou gerar relatórios em PDF. 
+      Restaurar backups garante que suas informações estarão seguras mesmo se limpar o cache do navegador.<br><br>
+
+      5. Configurações de tema e perfil ficam salvas localmente. 
+      Você pode personalizar o Notiva sem perder dados.<br><br>
+
+      Seguindo essas regras, sua experiência com o Notiva será segura e organizada.
+    </div>
+    <label>
+      <input type="checkbox" id="agreeTerms"> Concordo com as regras e quero manter meus dados seguros
+    </label>
+  `;
+  document.getElementById("agreeTerms").addEventListener("change", (e)=>{
+    nextBtn.disabled = !e.target.checked;
+  });
+  break;
 
     case "type":
       stepContainer.innerHTML = `
