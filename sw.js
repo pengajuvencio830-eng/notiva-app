@@ -5,8 +5,8 @@ const ASSETS = [
   "/",
   "/index.html",
   "/manifest.json",
-  "/assets/css/style.css",
-  "/assets/js/main.js",
+  "/style.css",
+  "/main.js",
   "/icon-192.png",
   "/icon-512.png"
 ];
