@@ -273,15 +273,16 @@ function escapeHTML(str = "") {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 }
-//renderNotes 
-
 request.onsuccess = e => {
   db = e.target.result;
+
+  // Cria a nota de boas-vindas se não houver nenhuma
+  createWelcomeNote();
+
   renderNotes();
   
   checkVisitorStatus(); 
 };
-
 function showLoading() {
   document.getElementById("loading").classList.remove("hidden");
 }
