@@ -36,7 +36,82 @@ function toggleSelection(noteId, element) {
   updateSelectionUI();
 }
 
+function createWelcomeNote() {
+  const tx = db.transaction("notes", "readonly");
+  const store = tx.objectStore("notes");
 
+  const getAll = store.getAll();
+  getAll.onsuccess = () => {
+    const notes = getAll.result || [];
+
+    // Se NÃO houver nenhuma nota, cria a nota de instruções
+    if (notes.length === 0) {
+      const writeTx = db.transaction("notes", "readwrite");
+      const writeStore = writeTx.objectStore("notes");
+
+      writeStore.add({
+        title: "🎉 Bem‑vindo ao Notiva!",
+        content: `🎉 Bem‑vindo ao Notiva — Seu Centro de Organização 🎉
+
+Esta nota de instruções foi criada automática para te ajudar a começar com o Notiva. Você pode apagá‑la a qualquer momento ou editá‑la como quiser.
+
+🧭 **Como usar o Notiva**
+
+📌 1) Criar uma Nota  
+- Toque no botão ➕ na barra inferior para adicionar uma nova nota.  
+- Preencha o Título, Disciplina e o Conteúdo.  
+- Toque em “Salvar”.
+
+🔎 2) Pesquisar notas  
+- Use a barra de pesquisa no topo para encontrar notas por título, assunto ou conteúdo.
+
+⭐ 3) Favoritos  
+- Toque em ⭐ dentro da visualização da nota para marcar como favorita.  
+- Use o ícone ❤️ no menu inferior para ver apenas seus favoritos.
+
+🗑 4) Lixeira  
+- Ao apagar uma nota, ela vai para a Lixeira.  
+- Na Lixeira, você pode:
+   ↻ Restaurar notas apagadas  
+   🗑 Apagar permanentemente
+
+📁 5) Exportar e Importar  
+Dentro das configurações:
+- **Exportar como JSON** — backup completo das suas notas.  
+- **Exportar como PDF** — relatório pronto para impressão.  
+- **Importar JSON** — restaurar um backup antigo.
+
+🎨 6) Tema  
+- Escolha entre **Dark** e **Light** para combinar com seu estilo.
+
+👤 7) Perfil  
+- Defina seu nome nas configurações para personalizar o app.  
+- O ID é gerado automaticamente.
+
+🔄 8) Instalar App  
+- Na mesma área de configurações, use **Instalar App** para transformar o Notiva em um app progressivo no seu dispositivo.
+
+🔗 Links úteis  
+📘 Documentação e Guia: https://github.com/pengajuvencio830‑eng/notiva‑app  
+📩 Suporte: notiva@gmail.com
+
+💡 **Dica profissional:**  
+Sempre mantenha backups regulares usando **Exportar JSON**. Assim você tem segurança extra mesmo se limpar o cache do navegador.
+
+✨ Aproveite sua experiência com o Notiva! ✨`,
+        subject: "Introdução",
+        createdAt: Date.now(),
+        favorite: true,
+        deleted: false
+      });
+
+      writeTx.oncomplete = () => {
+        renderNotes();
+        showToast("📝 Nota de instruções criada com sucesso!");
+      };
+    }
+  };
+}
 function editSelected() {
   if (selectedNotes.size !== 1) return;
   
