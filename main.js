@@ -1395,3 +1395,215 @@ window.addEventListener('appinstalled', () => {
   showToast('App instalado com sucesso');
   installBtn.style.display = 'none';
 });
+
+
+const modal = document.getElementById("onboardingModal");
+const stepContainer = document.getElementById("onboardingStep");
+const nextBtn = document.getElementById("nextBtn");
+
+let currentStep = 0;
+let userData = {
+  type: null,
+  profile: {},
+  theme: null
+};
+
+const steps = [
+  "presentation",
+  "terms",
+  "type",
+  "questions",
+  "profile",
+  "theme",
+  "finalize"
+];
+
+function startOnboarding() {
+  modal.classList.remove("hidden");
+  renderStep();
+}
+
+function renderStep() {
+  nextBtn.disabled = true;
+  stepContainer.innerHTML = "";
+
+  const step = steps[currentStep];
+
+  switch(step) {
+    case "presentation":
+      stepContainer.innerHTML = `
+        <img src="app-icon.png" alt="App" style="width:150px;margin-bottom:20px;">
+        <p>Bem-vindo ao Notiva.</p>
+      `;
+      nextBtn.disabled = false;
+      break;
+
+    case "terms":
+      stepContainer.innerHTML = `
+        <h3>Termos e Condições</h3>
+        <div style="height:150px; overflow:auto; border:1px solid #ccc; padding:10px;">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit...
+        </div>
+        <label>
+          <input type="checkbox" id="agreeTerms"> Concordo com os termos
+        </label>
+      `;
+      document.getElementById("agreeTerms").addEventListener("change", (e)=>{
+        nextBtn.disabled = !e.target.checked;
+      });
+      break;
+
+    case "type":
+      stepContainer.innerHTML = `
+        <h3>Selecione o tipo de uso</h3>
+        <button class="type-btn" data-type="student">Estudante</button>
+        <button class="type-btn" data-type="company">Empresa</button>
+        <button class="type-btn" data-type="church">Igreja</button>
+        <button class="type-btn" data-type="other">Outros</button>
+      `;
+      document.querySelectorAll(".type-btn").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          userData.type = btn.dataset.type;
+          nextBtn.disabled = false;
+        });
+      });
+      break;
+
+    case "questions":
+      renderQuestions();
+      break;
+
+    case "profile":
+      stepContainer.innerHTML = `
+        <h3>Crie seu perfil</h3>
+        <input type="text" id="profileName" placeholder="Digite seu nome">
+        <small id="profileError" style="color:red;display:none;">Nome inválido</small>
+      `;
+      const input = document.getElementById("profileName");
+      const error = document.getElementById("profileError");
+      input.addEventListener("input", ()=>{
+        if(input.value.trim().length >= 2){
+          error.style.display = "none";
+          nextBtn.disabled = false;
+          userData.profile.name = input.value.trim();
+        } else {
+          error.style.display = "block";
+          nextBtn.disabled = true;
+        }
+      });
+      break;
+
+    case "theme":
+      stepContainer.innerHTML = `
+        <h3>Escolha o tema</h3>
+        <button class="theme-btn" data-theme="light">Light</button>
+        <button class="theme-btn" data-theme="dark">Dark</button>
+        <button class="theme-btn" data-theme="skip">Ignorar</button>
+      `;
+      document.querySelectorAll(".theme-btn").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const val = btn.dataset.theme;
+          userData.theme = val==="skip"?null:val;
+          nextBtn.disabled = false;
+        });
+      });
+      break;
+
+    case "finalize":
+      stepContainer.innerHTML = `<h3>Preparando seu app...</h3><p>Aguarde um momento.</p>`;
+      nextBtn.disabled = true;
+      setTimeout(()=>{
+        localStorage.setItem("notivaOnboarded","true");
+        modal.classList.add("hidden");
+        if(userData.theme) changeTheme(userData.theme);
+        renderNotes();
+        showToast("Configuração inicial concluída");
+      },1500);
+      break;
+  }
+}
+
+function renderQuestions(){
+  stepContainer.innerHTML = "";
+  nextBtn.disabled = true;
+
+  if(userData.type === "student"){
+    stepContainer.innerHTML = `
+      <h3>Informações do estudante</h3>
+      <select id="studentLevel">
+        <option value="">Selecione...</option>
+        <option value="highschool">Ensino Médio</option>
+        <option value="college">Faculdade</option>
+      </select>
+    `;
+    document.getElementById("studentLevel").addEventListener("change",(e)=>{
+      userData.profile.level = e.target.value;
+      nextBtn.disabled = !e.target.value;
+    });
+  }
+  else if(userData.type === "company"){
+    stepContainer.innerHTML = `
+      <h3>Informações da empresa</h3>
+      <input type="text" id="companyName" placeholder="Nome da empresa">
+      <input type="text" id="companySector" placeholder="Setor de atuação">
+    `;
+    const name = document.getElementById("companyName");
+    const sector = document.getElementById("companySector");
+    [name, sector].forEach(el=>{
+      el.addEventListener("input", ()=>{
+        if(name.value.trim() && sector.value.trim()){
+          nextBtn.disabled = false;
+          userData.profile.companyName = name.value.trim();
+          userData.profile.sector = sector.value.trim();
+        } else {
+          nextBtn.disabled = true;
+        }
+      });
+    });
+  }
+  else if(userData.type === "church"){
+    stepContainer.innerHTML = `
+      <h3>Informações da igreja</h3>
+      <input type="text" id="churchName" placeholder="Nome da igreja">
+      <input type="text" id="churchLeader" placeholder="Líder principal">
+    `;
+    const name = document.getElementById("churchName");
+    const leader = document.getElementById("churchLeader");
+    [name, leader].forEach(el=>{
+      el.addEventListener("input", ()=>{
+        if(name.value.trim() && leader.value.trim()){
+          nextBtn.disabled = false;
+          userData.profile.churchName = name.value.trim();
+          userData.profile.churchLeader = leader.value.trim();
+        } else {
+          nextBtn.disabled = true;
+        }
+      });
+    });
+  }
+  else if(userData.type === "other"){
+    stepContainer.innerHTML = `
+      <h3>Outros</h3>
+      <textarea id="otherDescription" placeholder="Descreva o uso do app"></textarea>
+    `;
+    const desc = document.getElementById("otherDescription");
+    desc.addEventListener("input", ()=>{
+      if(desc.value.trim()){
+        nextBtn.disabled = false;
+        userData.profile.description = desc.value.trim();
+      } else {
+        nextBtn.disabled = true;
+      }
+    });
+  }
+}
+
+nextBtn.addEventListener("click", ()=>{
+  currentStep++;
+  renderStep();
+});
+
+// Inicia apenas se não tiver feito antes
+if(!localStorage.getItem("notivaOnboarded")){
+  startOnboarding();
+            }
